@@ -1,0 +1,16 @@
+@import './quill.snow.css';
+@import './fontawesome-all.min.css';
+@import './highlight-monokai-sublime.css';
+@import './quill.snow.css';
+
+.ql-formats button {
+	color: #444444;
+	font-size: 17px;
+}
+#fileInput {
+	display: none;
+}
+
+pre.ql-syntax {
+	background-color: #272822 !important;
+}
