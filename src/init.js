@@ -13,6 +13,7 @@ function loadFile() {
 		let file = element.files[0];
 		element.value = "";
 		current_fn = file.name;
+		document.title = current_fn + ' - Notes';
 		var reader = new FileReader();
 		reader.onload = (e) => {
 			let text = e.target.result;
