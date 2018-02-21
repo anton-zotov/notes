@@ -1,12 +1,14 @@
 import saveAs from './FileSaver.js';
 import highlight from './highlight';
 import Quill from 'quill';
+let Inline = Quill.import('blots/inline');
 import { remote } from 'electron';
 
 function saveToFile(text) {
 	var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
 	saveAs(blob, current_fn || default_fn);
 }
+
 
 function loadFile() {
 	const element = document.querySelector('#fileInput');
@@ -17,7 +19,7 @@ function loadFile() {
 		var reader = new FileReader();
 		reader.onload = (e) => {
 			let text = e.target.result;
-			setPage({text, title: current_fn});
+			setPage({ text, title: current_fn });
 		};
 		reader.readAsText(file);
 	}
@@ -40,9 +42,7 @@ function getGlobalObject() {
 }
 
 function getInitialTitle() {
-	const title = isElectron() ? getGlobalObject().title : '';
-	const default_title = 'New note';
-	return title || default_title;
+	return isElectron() ? getGlobalObject().title : '';
 }
 
 function getInitialText() {
@@ -65,6 +65,8 @@ function getInitialPage() {
 
 function setTitle(title) {
 	const postfix = ' - Notes';
+	const default_title = 'New note';
+	title = title || default_title;
 	document.title = title + postfix;
 }
 
@@ -79,8 +81,9 @@ function setPage(page) {
 
 let toolbar = [[{ header: [1, 2, false] }],
 ['bold', 'italic', 'underline'],
-['image', 'link', 'code-block'],
+['image', 'link'],
 [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'align': [] }],
+['code-word', 'code-block'],
 ['load', 'save'],
 ['zoom-in', 'zoom-out']];
 
@@ -95,10 +98,9 @@ let options = {
 };
 
 const editorParent = document.querySelector('#editor');
-const editor = new Quill(editorParent, options);
+const quill = new Quill(editorParent, options);
 const editor_input = editorParent.querySelector('.ql-editor');
 const default_fn = 'note.htm';
-const initial_text = getInitialText();
 let current_fn;
 
 bindClick('.ql-save', () => {
@@ -108,11 +110,27 @@ bindClick('.ql-save', () => {
 bindClick('.ql-load', loadFile);
 bindClick('.ql-zoom-in', () => electron.changeZoomFactor(0.1));
 bindClick('.ql-zoom-out', () => electron.changeZoomFactor(-0.1));
+bindClick('.ql-code-word', () => {
+	quill.format('codeword', true);
+});
 
 document.querySelector('.ql-save').classList.add('far', 'fa-save');
 document.querySelector('.ql-load').classList.add('fa', 'fa-upload');
 document.querySelector('.ql-zoom-in').classList.add('fa', 'fa-search-plus');
 document.querySelector('.ql-zoom-out').classList.add('fa', 'fa-search-minus');
+document.querySelector('.ql-code-word').classList.add('fa', 'fa-pen-square');
+
+class CodeWordBlot extends Inline {
+	static create(value) {
+		const node = super.create(value);
+		node.setAttribute('spellcheck', false);
+		node.textContent = value.value;
+		return node;
+	}
+}
+CodeWordBlot.blotName = 'codeword';
+CodeWordBlot.tagName = 'codeword';
+Quill.register(CodeWordBlot);
 
 setPage(getInitialPage());
 

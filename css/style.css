@@ -14,3 +14,9 @@
 pre.ql-syntax {
 	background-color: #272822 !important;
 }
+
+codeword {
+	background-color:#e8e8e8;
+	padding: 2px 4px;
+	letter-spacing: 1px;
+}

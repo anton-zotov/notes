@@ -13,7 +13,7 @@ let input_fn = process.argv[1];
 //input_fn = 'C:/Users/Master/Desktop/Conspects/_learn.htm';
 if (input_fn && input_fn != '.') {
 	fs.readFile(input_fn, 'utf8', function (err, contents) {
-		global.sharedObject = { text: contents, title: input_fn };
+		global.sharedObject = { text: contents, title: path.basename(input_fn) };
 	});
 }
 
