@@ -1,4 +1,5 @@
 module.exports = {
+	target: 'electron',
 	entry: './src/init.js',
 	output: {
 		filename: './dist/bundle.js'
@@ -18,5 +19,9 @@ module.exports = {
 				use: ['style-loader', 'css-loader']
 			}
 		]
+	},
+	devtool: 'source-map',
+	stats: {
+		colors: true,
 	}
 };

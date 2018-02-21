@@ -1,14 +1,24 @@
 const electron = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs');
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
 let mainWindow;
+global.sharedObject = { text: '', title: '' };
+
+let input_fn = process.argv[1];
+//input_fn = 'C:/Users/Master/Desktop/Conspects/_learn.htm';
+if (input_fn && input_fn != '.') {
+	fs.readFile(input_fn, 'utf8', function (err, contents) {
+		global.sharedObject = { text: contents, title: input_fn };
+	});
+}
 
 function createWindow() {
-	mainWindow = new BrowserWindow({ 
+	mainWindow = new BrowserWindow({
 		width: 1200, height: 800,
 		webPreferences: {
 			preload: path.resolve(path.join(__dirname, '/src/preload.js'))
@@ -23,7 +33,7 @@ function createWindow() {
 	}))
 
 	// Open the DevTools.
-	//mainWindow.webContents.openDevTools()
+	// mainWindow.webContents.openDevTools()
 
 	mainWindow.on('closed', function () {
 		mainWindow = null
