@@ -15,7 +15,6 @@ function loadFile() {
 	element.onchange = (e) => {
 		let file = element.files[0];
 		element.value = "";
-		current_fn = file.name;
 		var reader = new FileReader();
 		reader.onload = (e) => {
 			let text = e.target.result;
@@ -42,7 +41,7 @@ function getGlobalObject() {
 }
 
 function getInitialTitle() {
-	return isElectron() ? getGlobalObject().title : '';
+	return getGlobalObject().title;
 }
 
 function getInitialText() {
@@ -77,6 +76,7 @@ function setHtml(html) {
 function setPage(page) {
 	setHtml(page.text);
 	setTitle(page.title);
+	current_fn = page.title;
 }
 
 let toolbar = [[{ header: [1, 2, false] }],
